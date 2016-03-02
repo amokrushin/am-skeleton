@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+
+const program = require( 'commander' ),
+    http = require( 'http' ),
+    app = require( '../app' ),
+    sio = require( '../server/socketio' ),
+    server = http.createServer( app ),
+    logger = require( '../server/logger' );
+
+program
+    .option( '-H, --host <host>', 'specify the host [127.0.0.1]', '127.0.0.1' )
+    .option( '-p, --port <port>', 'specify the port [3085]', '3085' )
+    .parse( process.argv );
+
+var port = normalizePort( program.port ) || normalizePort( process.env.PORT ) || '3085',
+    host = program.host || '127.0.0.1';
+
+app.set( 'port', port );
+app.set( 'host', host );
+
+sio( server );
+
+server.listen( port, host );
+server.on( 'error', onError );
+server.on( 'listening', onListening );
+server.on( 'close', onClose );
+
+function normalizePort( val ) {
+    var port = parseInt( val, 10 );
+    if( isNaN( port ) ) return val;
+    if( port >= 0 ) return port;
+    return false;
+}
+
+function onError( error ) {
+    if( error.syscall !== 'listen' )
+    {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    switch( error.code )
+    {
+        case 'EACCES':
+            logger.error( bind + ' requires elevated privileges' );
+            process.exit( 1 );
+            break;
+        case 'EADDRINUSE':
+            logger.error( bind + ' is already in use' );
+            process.exit( 1 );
+            break;
+        default:
+            throw error;
+    }
+}
+
+function onListening() {
+    var addr = server.address();
+    logger.info( 'Listening on ' + addr.address + ':' + addr.port );
+}
+
+function onClose() {
+    logger.info( 'Server stopped' );
+}
+
+process.once( 'SIGINT', function() {
+    server.close();
+    setTimeout( function() {
+        process.exit( 1 );
+    }, 1000 );
+} );

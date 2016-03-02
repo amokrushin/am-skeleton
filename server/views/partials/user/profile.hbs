@@ -1,0 +1,54 @@
+<h1 class="p-b-2">{{this.profile.displayName}}</h1>
+
+<h2 class="m-b-1">
+    <a href="https://steamcommunity.com/profiles/{{this.profile.steamId}}" target="_blank" rel="external">
+        Steam profile
+    </a>
+</h2>
+
+<p class="p-l-3 m-b-2">
+    <img class="" src="{{this.profile.avatarUrlM}}">
+</p>
+
+<h2>Account info</h2>
+<ul class="profile__steam-stats m-b-2">
+    {{#each this.profile.steamStatList}}
+        <li class="profile__steam-stats-item">{{this}}</li>
+    {{/each}}
+</ul>
+
+{{#if this.user.permissions.viewPrivateProfile}}
+    <form id="profileActionsForm" method="post">
+        <h2 class="m-b-1">
+            Steam Trade Link
+            <a href="http://steamcommunity.com/profiles/{{this.user.steamId}}/tradeoffers/privacy#trade_offer_access_url"
+               target="_blank"> <i class="fa fa-question-circle"></i> </a>
+        </h2>
+        <div class="form-group row m-b-3">
+            <div>
+                {{#if this.user.permissions.setTradeLink}}
+                    <div class="col-sm-8">
+                        <input class="form-control" id="fTradeLink" type="text" name="tradeLink"
+                               value="{{this.profile.tradeLink}}"
+                            {{{ifFalse this.user.permissions.setTradeLink "disabled"}}}>
+                    </div>
+                    <button class="btn btn-primary" type="submit" name="action" value="setTradeLink">{{{i18nK "ui.button.save"}}}</button>
+                {{else}}
+                    {{#is this.profile.tradeLink "===" ""}}
+                        <small class="p-l-1">{{{i18nK "profile.tradeLinkNotSet"}}}</small>
+                    {{else}}
+                        <a class="p-l-1" href="{{this.profile.tradeLink}}" target="_blank">{{this.profile.tradeLink}}</a>
+                    {{/is}}
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if this.user.permissions.reloadProfile}}
+            <button class="btn btn-primary" type="submit" name="action" value="reloadProfile">
+                {{{i18nK "ui.button.updateProfile"}}}
+            </button>
+        {{/if}}
+
+        <input type="hidden" name="_csrf" value="{{{or @csrftoken this.csrftoken}}}">
+    </form>
+{{/if}}
