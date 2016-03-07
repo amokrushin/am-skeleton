@@ -1,4 +1,4 @@
-var async = require( 'async' ),
+const async = require( 'neo-async' ),
     _ = require( 'lodash' ),
     error = require( '../error' ),
     rbac = require( '../rbac' ),

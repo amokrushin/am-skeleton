@@ -1,6 +1,6 @@
 "use strict";
 
-var async = require( 'async' ),
+var async = require( 'neo-async' ),
     _ = require( 'lodash' ),
     passport = require( '../passport' ),
     credential = require( 'credential' )(),
