@@ -7,6 +7,8 @@ const webpack = require( 'webpack' ),
     logger = require( './logger' );
 
 module.exports = function( app ) {
+    logger.info( 'app', 'init webpack dev' );
+
     // Step 1: Create & configure a webpack compiler
     var compiler = webpack( webpackConfig );
 

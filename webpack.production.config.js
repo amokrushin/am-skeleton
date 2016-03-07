@@ -1,23 +1,15 @@
-const Webpack = require( 'webpack' );
-const path = require( 'path' );
-const autoprefixer = require( 'autoprefixer' );
-const BowerWebpackPlugin = require( "bower-webpack-plugin" );
-const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
-const siteConfig = require( './config.json' );
-const CleanWebpackPlugin = require( 'clean-webpack-plugin' );
+const Webpack = require( 'webpack' ),
+    path = require( 'path' ),
+    autoprefixer = require( 'autoprefixer' ),
+    BowerWebpackPlugin = require( "bower-webpack-plugin" ),
+    ExtractTextPlugin = require( 'extract-text-webpack-plugin' ),
+    CleanWebpackPlugin = require( 'clean-webpack-plugin' );
 
 var config = {
-    //devtool: 'eval',
-
     entry: [
         'bootstrap-loader/extractStyles',
         './client/scripts/index.js'
     ],
-    //output: {
-    //    path: path.resolve( __dirname, 'public', 'build' ),
-    //    filename: 'bundle.js',
-    //    publicPath: '/'
-    //},
     output: {
         path: path.join( __dirname, 'public', 'build' ),
         filename: 'bundle.js',

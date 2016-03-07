@@ -1,15 +1,12 @@
 'use strict';
-const config = require( './server/config' ),
-    path = require( 'path' ),
-    fse = require( 'fs-extra' );
 
-config.set( 'apiKeyFile', path.resolve( __dirname, 'credentials/api-key.json' ) );
-config.set( 'whitelistedEmails', path.resolve( __dirname, 'credentials/whitelist.json' ) );
-config.set( 'tokenPath', path.resolve( __dirname, 'credentials' ) );
-config.set( 'dataPath', path.resolve( __dirname, 'data' ) );
-config.set( 'leasewebCookieFile', path.resolve( __dirname, 'data/leaseweb-cookies.json' ) );
-fse.ensureFileSync( config.get( 'leasewebCookieFile' ) );
+const path = require( 'path' ),
+    configPath = /server$/.test( __dirname )
+        ? path.resolve( __dirname, '../config.json' )
+        : path.resolve( __dirname, './config.json' ),
+    config = require( './server/config' );
 
+config.init( configPath );
 
 const express = require( 'express' ),
     app = express(),
@@ -25,6 +22,7 @@ const express = require( 'express' ),
 app.locals.env = app.get( 'env' );
 
 middlewaresBefore( app );
+
 middlewares( app );
 view( app );
 router( app );

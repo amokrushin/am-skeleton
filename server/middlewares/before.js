@@ -1,11 +1,17 @@
 const express = require( 'express' ),
     _ = require( 'lodash' ),
     path = require( 'path' ),
-    logger = require( '../logger' );
+    config = require( '../config' );
+logger = require( '../logger' );
 
 module.exports = function( app ) {
 
     app.set( 'trust proxy', 'loopback' );
+
+    /*
+     * ==== Config: baseUrl, etc ====
+     */
+    app.use( config.middleware );
 
     app.use( '/build', express.static( path.join( __dirname, '../../public/build' ) ) );
     //app.use( '/locales', express.static( path.join( __dirname, '../../locales' ) ) );

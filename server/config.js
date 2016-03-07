@@ -1,29 +1,42 @@
-var nconf = require( 'nconf' ),
+'use strict';
+
+const config = require( 'nconf' ),
     url = require( 'url' ),
     path = require( 'path' ),
-    configPath = /server$/.test( __dirname )
-        ? path.resolve( __dirname, '../config.json' )
-        : path.resolve( __dirname, './config.json' );
+    fse = require( 'fs-extra' );
 
-nconf.use( 'file', {file: configPath} );
+var isInitial = true;
 
-nconf.load( function( err, config ) {
-    if( !config.secret )
+function ensureJsonSync( path ) {
+    fse.ensureFileSync( path );
+    return fse.readJsonSync( path, {throws: false} )
+        ? null
+        : fse.outputJsonSync( path, {} );
+}
+
+config.init = function( configPath ) {
+    ensureJsonSync( configPath );
+
+    config.use( 'file', {file: configPath} );
+
+    config.load( function( err, config ) {
+        if( !config.secret )
+        {
+            config.set( 'secret', require( 'crypto' ).randomBytes( 64 ).toString( 'hex' ) );
+            config.save();
+        }
+    } );
+};
+
+config.middleware = function( req, res, next ) {
+    if( isInitial )
     {
-        nconf.set( 'secret', require( 'crypto' ).randomBytes( 64 ).toString( 'hex' ) );
-        nconf.save();
+        config.set( 'baseUrl', req.protocol + '://' + req.get( 'host' ) );
+        config.set( 'secure', req.protocol === 'https' );
+        isInitial = false;
+        return config.save( next );
     }
+    next();
+};
 
-    if( nconf.get( 'url' ) )
-    {
-        var urlObject = url.parse( nconf.get( 'url' ) );
-        nconf.set( 'baseUrl', urlObject.protocol + '//' + urlObject.host );
-        nconf.set( 'secure', /^https/.test( urlObject.protocol ) );
-        nconf.set( 'relativePath', urlObject.pathname );
-        nconf.set( 'port', urlObject.port || nconf.get( 'port' ) || 3000 );
-        nconf.set( 'hostname', urlObject.hostname );
-    }
-
-} );
-
-module.exports = nconf;
+module.exports = config;
