@@ -8,6 +8,7 @@ const express = require( 'express' ),
     session = require( 'express-session' ),
     csurf = require( 'csurf' ),
     config = require( '../config' ),
+    logger = require( '../logger' ),
     passport = require( '../passport' ),
     passportMiddleware = require( './passport' ),
     flash = require( 'flash' ),
@@ -32,14 +33,14 @@ function sessionMiddleware() {
     return session( {
         store: sessionStore,
         secret: config.get( 'secret' ),
-        key: 'express.sid',
+        key: 'sid',
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 2 weeks
-            secure: config.get( 'secure' )
-            //domain: config.get( 'hostname' )
+            secure: config.get( 'secure' ),
+            domain: config.get( 'hostname' )
         },
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false
     } );
 }
 
@@ -53,12 +54,7 @@ function csrf() {
 
 
 module.exports = function( app, sio ) {
-    app.locals.baseUrl = config.get( 'baseUrl' );
-    app.locals.env = app.get( 'env' );
-
-    app.use( express.static( path.join( __dirname, '../../public' ) ) );
-    app.use( '/locales', express.static( path.join( __dirname, '../../locales' ) ) );
-
+    //app.use( express.static( path.join( __dirname, '../../public' ) ) );
     app.use( bodyParser.json() );
     app.use( bodyParser.urlencoded( {extended: false} ) );
     app.use( cookieParser() );

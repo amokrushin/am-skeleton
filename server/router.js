@@ -1,9 +1,9 @@
 'use strict';
 
-const routes = require( './routes/index' ),
-    passportRouter = require( './routes/passport' );
+const passportRoutes = require( './routes/passport' ),
+    appRoutes = require( './routes/index' );
 
 module.exports = function( app ) {
-    app.use( '/', passportRouter );
-    app.use( '/', routes );
+    app.use( '/', passportRoutes );
+    app.use( '/', appRoutes );
 };

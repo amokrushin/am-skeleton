@@ -61,8 +61,8 @@ styles:
   # Core CSS
   reboot: true
   type: true
-  images: true
-  code: true
+  images: false
+  code: false
   grid: true
   tables: true
   forms: true
@@ -72,20 +72,20 @@ styles:
   animation: false
   dropdown: false
   button-group: false
-  input-group: false
+  input-group: true
   custom-forms: false
-  nav: false
-  navbar: false
+  nav: true
+  navbar: true
   card: false
   breadcrumb: false
-  pagination: false
+  pagination: true
   pager: false
-  labels: false
+  labels: true
   jumbotron: false
   alert: false
   progress: false
   media: false
-  list-group: false
+  list-group: true
   responsive-embed: false
   close: false
 
@@ -96,14 +96,14 @@ styles:
   carousel: false
 
   # Utility classes
-  utilities: false
-  utilities-spacing: false
-  utilities-responsive: false
+  utilities: true
+  utilities-spacing: true
+  utilities-responsive: true
 
 ### Bootstrap scripts
 scripts:
   alert: false
-  button: false
+  button: true
   carousel: false
   collapse: false
   dropdown: false
@@ -112,4 +112,4 @@ scripts:
   scrollspy: false
   tab: false
   tooltip: false
-  util: false
+  util: true

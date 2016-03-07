@@ -1,11 +1,13 @@
+'use strict';
+
 const passport = require( 'passport' );
 
-passport.serializeUser( function( userId, callback ) {
-    callback( null, userId );
+passport.serializeUser( function( user, callback ) {
+    callback( null, user.id );
 } );
 
-passport.deserializeUser( function( userId, callback ) {
-    callback( null, userId );
+passport.deserializeUser( function( id, callback ) {
+    callback( null, {id: id, roles: ['user']} );
 } );
 
 module.exports = passport;

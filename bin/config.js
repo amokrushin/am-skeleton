@@ -1,21 +1,18 @@
 'use strict';
 
-var jsonfile = require( 'jsonfile' ),
+var fse = require( 'fs-extra' ),
     prompt = require( 'prompt' ),
     _ = require( 'lodash' ),
     async = require( 'async' ),
     path = require( 'path' ),
     crypto = require( 'crypto' ),
-    fs = require( 'fs' ),
-    nconf = require( 'nconf' ),
-    credential = require( 'credential' )(),
-    filepath = path.resolve( __dirname, '../config.json' );
+    configPath = path.resolve( __dirname, '../config.json' );
 
 function genSecret() {
     return crypto.randomBytes( 40 ).toString( 'hex' );
 }
 
-var questions = function( config ) {
+const questions = function( config ) {
     return {
         main: [
             {
@@ -28,28 +25,17 @@ var questions = function( config ) {
                 description: 'Site secret',
                 name: 'secret',
                 'default': config.secret || genSecret()
-            }
-        ],
-        admin: [
-            {
-                description: 'Administrator login or email',
-                name: 'login'
             },
             {
-                description: 'Administrator password',
-                name: 'password'
+                description: 'Session store',
+                name: 'sessionStore',
+                'default': config.sessionStore || 'file'
             }
         ]
     };
 };
 
-try
-{
-    fs.closeSync( fs.openSync( filepath, 'wx' ) );
-} catch( e )
-{}
-
-jsonfile.readFile( filepath, function( err, config ) {
+fse.readJson( configPath, function( err, config ) {
     config = config || {};
     prompt.start();
     async.series( [
@@ -61,8 +47,8 @@ jsonfile.readFile( filepath, function( err, config ) {
             } );
         },
         function( callback ) {
-            jsonfile.writeFile( filepath, config, callback );
-            console.log( 'Config file saved', filepath );
+            fse.outputJson( configPath, config, callback );
+            console.log( 'Config file saved', configPath );
         }
     ], function( err ) {
         if( err ) return console.error( err );

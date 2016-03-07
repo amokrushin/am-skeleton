@@ -1,6 +1,6 @@
 var async = require( 'async' ),
     _ = require( 'lodash' ),
-    httpError = require( '../http-error' ),
+    error = require( '../error' ),
     rbac = require( '../rbac' ),
     rbacMiddleware = {};
 
@@ -12,10 +12,11 @@ var async = require( 'async' ),
  * sets
  *      req.user.permissions
  */
-rbacMiddleware.can = function( permissions, breakIfDenied ) {
-    if( !_.isBoolean( breakIfDenied ) ) breakIfDenied = true;
+rbacMiddleware.can = function( permissions, options ) {
+    if( !_.isBoolean( options.breakIfDenied ) ) options.breakIfDenied = true;
     return function( req, res, next ) {
-        if( !req.user ) return breakIfDenied ? next( httpError.http403( 'bx9y4p' ) ) : next();
+        if( !req.user && options.failureRedirect ) return res.redirect( options.failureRedirect );
+        if( !req.user ) return options.breakIfDenied ? next( error.code( 7, '1457042155289' ) ) : next();
         _.defaults( req.user, {permissions: {}} );
 
         async.map( _.isArray( permissions ) ? permissions : [permissions], function( permission, callback ) {
@@ -33,9 +34,15 @@ rbacMiddleware.can = function( permissions, breakIfDenied ) {
         }, function( err, permissionsPairs ) {
             if( err ) return next( err );
 
-            var permissions = _.fromPairs( permissionsPairs );
+            var permissions = _.fromPairs( permissionsPairs ),
+                isDenied = !_.min( _.values( permissions ) );
 
-            if( breakIfDenied && !_.min( _.values( permissions ) ) ) return next( httpError.http403( 'f4tjvk' ) );
+            if( options.failureRedirect && isDenied )
+            {
+                if( options.failureMessage ) req.flash( 'error', options.failureMessage );
+                return res.redirect( options.failureRedirect );
+            }
+            if( options.breakIfDenied && isDenied ) return next( error.code( 7, '1457042230270' ) );
 
             _.assign( req.user.permissions, permissions );
 

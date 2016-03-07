@@ -5,8 +5,9 @@
   "scripts": {
     "build": "webpack --config webpack.production.config.js",
     "deploy": "webpack -p --config webpack.production.config.js",
-    "watch": "nodemon --watch server --ignore server/views/ ./bin/www",
-    "setup": "node ./server/setup.js"
+    "watch": "nodemon --watch server --watch app.js ./bin/www",
+    "debug": "NODE_ENV=production nodemon --watch server --watch app.js ./bin/www",
+    "config": "node ./bin/config"
   },
   "author": "Anton Mokrushin <anton@mokr.org> (mokr.org)",
   "license": "MIT",
@@ -20,7 +21,6 @@
   "homepage": "https://github.com/amokrushin/am-skeleton#readme",
   "description": "",
   "dependencies": {
-    "async": "^1.5.2",
     "body-parser": "^1.15.0",
     "commander": "^2.9.0",
     "cookie-parser": "^1.4.1",
@@ -32,21 +32,23 @@
     "fs-extra": "^0.26.5",
     "hbs": "^4.0.0",
     "hbs-utils": "0.0.3",
-    "i18next": "^2.2.0",
-    "i18next-sync-fs-backend": "^0.1.0",
     "inquirer": "^0.12.0",
     "jsonfile": "^2.2.3",
     "lodash": "^4.5.1",
+    "messenger": "https://github.com/HubSpot/messenger.git",
     "moment": "^2.11.2",
+    "neo-async": "^1.7.4",
     "nconf": "^0.8.4",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
     "prompt": "^1.0.0",
     "rbac2": "^1.0.5",
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.4.5",
-    "winston": "^2.1.1",
-    "xss-filters": "^1.2.6"
+    "winston": "^2.1.1"
+  },
+  "optionalPeerDependencies": {
+    "i18next": "^2.2.0",
+    "i18next-sync-fs-backend": "^0.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
@@ -56,10 +58,13 @@
     "clean-webpack-plugin": "^0.1.8",
     "css-loader": "^0.23.1",
     "es6-promise": "^3.1.2",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "handlebars": "^4.0.5",
+    "handlebars-loader": "^1.1.4",
     "i18next-xhr-backend": "^0.3.0",
     "node-sass": "^3.4.2",
-    "pace": "0.0.4",
+    "pace": "github:hubspot/pace",
     "page": "^1.6.4",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.1.2",

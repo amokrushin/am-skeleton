@@ -8,4 +8,6 @@ const _ = require( 'lodash' ),
 
 router.get( '/', middlewaresIndex, controller.index );
 
+router.get( '/api/messages', controller.messages );
+
 module.exports = router;

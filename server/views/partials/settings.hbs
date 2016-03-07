@@ -1,0 +1,14 @@
+<form method="POST">
+    <fieldset class="form-group">
+        <label for="filterByLabel">Filter by label</label>
+        <select class="form-control" id="filterByLabel" name="filterByLabel">
+        </select>
+    </fieldset>
+    <fieldset class="form-group">
+        <label for="changeLabelTo">Change label to</label>
+        <select class="form-control" id="changeLabelTo" name="changeLabelTo">
+        </select>
+    </fieldset>
+    <input type="hidden" name="_csrf" value="{{{or @csrftoken this.csrftoken}}}">
+    <button type="submit" class="btn btn-primary ajax-submit">Submit</button>
+</form>

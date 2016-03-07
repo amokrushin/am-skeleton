@@ -1,3 +1,12 @@
-<h1>{{{inHTMLData message}}}</h1>
-<h2>{{error.status}}</h2>
-<pre>{{error.stack}}</pre>
+<h2>
+    {{error.status}}
+    <small>{{error.message}}</small>
+</h2>
+<h5>Code: {{error.code}}</h5>
+<h5>{{error.description}}</h5>
+{{#is @env "development"}}
+    <h5>Tags</h5>
+    <pre>{{json error.tags}}</pre>
+    <h5>Metadata</h5>
+    <pre>{{json error.metadata}}</pre>
+{{/is}}

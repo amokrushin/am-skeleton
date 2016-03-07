@@ -10,7 +10,7 @@ const _ = require( 'lodash' ),
 function loadHelpers() {
     var helpers = fs.readdirSync( path.join( __dirname, '../shared/handlebars' ) );
     _.forEach( helpers, function( helper ) {
-        var helperName = helper.replace( '.js', '' ),
+        const helperName = helper.replace( '.js', '' ),
             helperFn = require( '../shared/handlebars/' + helperName );
 
         if( _.isFunction( helperFn ) )

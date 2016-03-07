@@ -12,20 +12,41 @@
     {{/is}}
 </head>
 <body>
-<div class="container-fluid">
-    {{> header}}
-    <div class="container">
-        <div class="row">
-            <div class="nav-main__layout">
-                {{> nav}}
-            </div>
-            <div class="content__layout">
-                {{{body}}}
+{{#if error}}
+    <div class="container-fluid">
+        {{> header}}
+        <div class="container">
+            <div class="row">
+                <div class="content__layout">
+                    {{{body}}}
+                </div>
             </div>
         </div>
+        {{> footer}}
     </div>
-    {{> footer}}
-</div>
-<input id="csrf" type="hidden" value="{{@csrftoken}}">
+{{else}}
+    {{#each messages}}
+        <div class="alert alert-{{this.type}}" role="alert">
+            {{this.message}}
+        </div>
+    {{/each}}
+    {{#if user.permissions.accessBackend}}
+        <div class="container-fluid">
+            {{> header}}
+            <div class="container">
+                <div class="row">
+                    <div class="content__layout">
+                        {{{body}}}
+                    </div>
+                </div>
+            </div>
+            {{> footer}}
+        </div>
+    {{else}}
+        {{> login}}
+    {{/if}}
+
+    <input id="csrf" type="hidden" value="{{@csrftoken}}">
+{{/if}}
 </body>
 </html>

@@ -1,28 +1,37 @@
-var async = require( 'async' ),
-    _ = require( 'lodash' ),
+var _ = require( 'lodash' ),
     logger = require( '../logger' ),
     controller = {};
 
-controller.index = function( req, res ) {
+controller.login = function( req, res, next ) {
+    res.render( 'index', {} );
+};
+
+controller.index = function( req, res, next ) {
+    const responseData = _.assign( {
+            //appSettings: req.user.store ? req.user.store.get( 'settings' ) : {}
+        },
+        _.pick( req, ['user', 'settings', 'path', 'csrftoken'] ),
+        res.data
+    );
+
     if( req.xhr || ~req.headers.accept.indexOf( 'json' ) )
     {
-        res.json( _.pick( req, ['user', 'raffle', 'raffles', 'profile', 'csrftoken'] ) );
+        res.json( responseData );
     }
     else
     {
-        res.render( 'index', req );
+        res.render( 'index', responseData );
     }
 };
 
-controller.join = function( req, res ) {
-    if( req.xhr || ~req.headers.accept.indexOf( 'json' ) )
+controller.messages = function( req, res, next ) {
+    const messages = [];
+    var message;
+    while( message = res.locals.flash.shift() )
     {
-        res.json( _.pick( req, ['user', 'raffle', 'raffles', 'csrftoken'] ) );
+        messages.push( message );
     }
-    else
-    {
-        res.redirect( 'back' );
-    }
+    res.json( messages );
 };
 
 module.exports = controller;

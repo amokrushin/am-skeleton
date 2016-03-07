@@ -1,7 +1,8 @@
 var moment = require( 'moment' );
 
-module.exports = function( context, block ) {
+module.exports = function( time, block ) {
     var format = block.hash.format || "MMM DD, YYYY hh:mm:ss A",
-        date = /\d+/.test( context ) ? parseInt( context, 10 ) : context;
-    return moment( date ).format( format );
+        timestamp = block.hash.type === 's' ? parseInt( time, 10 ) * 1000 : parseInt( time, 10 );
+
+    return moment( timestamp ).format( format );
 };

@@ -1,3 +1,17 @@
-<div>
-    Hello world!
+<div class="partial--tickets">
+    {{#if tickets}}
+        {{> tickets}}
+    {{/if}}
+</div>
+
+<div class="partial--services">
+    {{#if services}}
+        {{> services}}
+    {{/if}}
+</div>
+
+<div class="partial--settings">
+    {{#is path "===" "/settings"}}
+        {{> settings}}
+    {{/is}}
 </div>
